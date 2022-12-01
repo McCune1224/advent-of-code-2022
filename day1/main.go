@@ -26,31 +26,7 @@ func FileToSlice(filePath string) []string {
 	return fileSlice
 }
 
-func PartOne(caloriesList []string) int {
-	maxCalories := 0
-	currentCalories := 0
-
-	for _, calorie := range caloriesList {
-		if calorie == "" {
-			if maxCalories < currentCalories {
-				maxCalories = currentCalories
-			}
-			currentCalories = 0
-			continue
-		}
-
-		intCalorie, err := strconv.Atoi(calorie)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		currentCalories += intCalorie
-	}
-
-	return maxCalories
-}
-
-func PartTwo(caloriesList []string) int {
+func TopInventoryBags(caloriesList []string, topElvesAmount int) int {
 	caloriesSum := 0
 	elfCaloriesList := []int{}
 	currentCaloriesTally := 0
@@ -72,7 +48,7 @@ func PartTwo(caloriesList []string) int {
 		return elfCaloriesList[i] < elfCaloriesList[j]
 	})
 
-	for _, calorie := range elfCaloriesList[len(elfCaloriesList)-3:] {
+	for _, calorie := range elfCaloriesList[len(elfCaloriesList)-topElvesAmount:] {
 		caloriesSum += calorie
 	}
 
@@ -81,8 +57,6 @@ func PartTwo(caloriesList []string) int {
 
 func main() {
 	fileSlice := FileToSlice("input.txt")
-	answer1 := PartOne(fileSlice)
-	answer2 := PartTwo(fileSlice)
-	fmt.Printf("Part 1:\t%v\n", answer1)
-	fmt.Printf("Part 2:\t%v\n", answer2)
+	fmt.Printf("Part 1:\t%v\n", TopInventoryBags(fileSlice, 1))
+	fmt.Printf("Part 2:\t%v\n", TopInventoryBags(fileSlice, 3))
 }
