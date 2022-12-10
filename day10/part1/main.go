@@ -40,11 +40,11 @@ func LoadProgramInstructions(path string) []Instruction {
 	return instructionLines
 }
 
-func CalculateSignalStrength(instructions []Instruction, initialCycleCheck, cycleCheckIncrement int) (int, []string) {
+func CalculateSignalStrength(instructions []Instruction, initialCycleCheck, cycleCheckIncrement int) int {
 	currentCycle := 0
 	signalStrengthSum := 0
 	xRegistrySum := 1
-	crt := []string{}
+
 	for _, instruction := range instructions {
 		switch instruction.Name {
 
@@ -55,7 +55,6 @@ func CalculateSignalStrength(instructions []Instruction, initialCycleCheck, cycl
 					signalStrengthSum += xRegistrySum * currentCycle
 					fmt.Println("Cycle:", currentCycle, "\tX:", xRegistrySum, "\tSum:", signalStrengthSum)
 				}
-				crt = append(crt, AddCrtPixel(currentCycle, xRegistrySum))
 			}
 
 		case "addx":
@@ -65,36 +64,15 @@ func CalculateSignalStrength(instructions []Instruction, initialCycleCheck, cycl
 					signalStrengthSum += xRegistrySum * currentCycle
 					fmt.Println("Cycle:", currentCycle, "\tX:", xRegistrySum, "\tSum:", signalStrengthSum)
 				}
-				crt = append(crt, AddCrtPixel(currentCycle, xRegistrySum))
 			}
 			xRegistrySum += instruction.Value
 		}
 	}
-	return signalStrengthSum, crt
-}
-
-func AddCrtPixel(cycle, register int) string {
-	position := cycle % 40
-	// top line edge case
-	if position == 0 {
-		position = 40
-	}
-	// Sprite is 3 wide ###
-	lowEnd := register
-	highEnd := register + 2
-	if position >= lowEnd && position <= highEnd {
-		return "#"
-	}
-	return " "
+	return signalStrengthSum
 }
 
 func main() {
 	example := LoadProgramInstructions("../input.txt")
-	_, crt := CalculateSignalStrength(example, 20, 40)
-	for index, val := range crt {
-		fmt.Print(val)
-		if ((index + 1) % 40) == 0 {
-			fmt.Println("")
-		}
-	}
+	foo := CalculateSignalStrength(example, 20, 40)
+	fmt.Println(foo)
 }
